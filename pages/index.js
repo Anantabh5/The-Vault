@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from "js-cookie";
-
 import Layout from '../components/layout';
 import Homepage from "../components/homepage"
-
+import connectDb from "../db/db";
+connectDb();
 const Home = () => {
   const router = useRouter();
 

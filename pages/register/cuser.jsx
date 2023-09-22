@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import Layout from "../../components/layout";
 import Cookies from "js-cookie";
+import axios from "axios";
+import  {useRouter}  from 'next/router';
 const RegistrationForm = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     fullName: '',
     dobDay: '',
@@ -12,7 +15,6 @@ const RegistrationForm = () => {
     email: '',
     securityPin: '',
   });
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -21,12 +23,23 @@ const RegistrationForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission logic here
     console.log('Form Data:', formData);
+    const user = { ...formData }; // Copy formData into user object
+
+    try {
+      const response = await axios.post('/api/register', user);
+      console.log(response.data);
+      alert('register successful');
+      await router.push(`/cuser/${response.data.id}`); // Assuming the response contains an 'id' field
+    } catch (error) {
+      console.error(error);
+    }
+
     Cookies.set('userId', user);
-      Cookies.set('type', 'user');
+    Cookies.set('type', 'user');
   };
 
   // Generate an array of years from current year back to 1900
