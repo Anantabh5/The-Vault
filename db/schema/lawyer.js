@@ -8,7 +8,9 @@ const lawyerSchema = new Schema(
         lawyerEnrollmentNumber: { type: String, required: true },
         email: { type: String, required: true },
         password: { type: String, required: true },
-        mobilenumber: { type: Number, required: true },
+        mobileNumber: { type: Number, required: true },
+        fileId: { type: [String] },
+
     },
     {
         timestamps: true,

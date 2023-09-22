@@ -1,8 +1,14 @@
-// Import the CUser model and connect to the database
-import CUser from '../../../db/schema/cuser';
+// pages/api/register/cuser.js
 import connectDb from '../../../db/db';
+import CUser from '../../../db/schema/cuser'; // Import your CUser model
+import { v4 as uuidv4 } from 'uuid'; // Import uuid
+import nc from 'next-connect';
+
 connectDb();
-export default async function handler(req, res) {
+
+const handler = nc();
+
+handler.post(async (req, res) => {
     if (req.method === 'POST') {
         try {
             // Ensure the database connection is established
@@ -14,8 +20,12 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'All fields are required' });
             }
 
-            // Create a new user document
+            // Generate a UUID (v4) for userId
+            const userId = uuidv4();
+
+            // Create a new user document with the generated userId
             const newUser = new CUser({
+                userId,
                 fullName,
                 mobileNumber,
                 email,
@@ -33,4 +43,6 @@ export default async function handler(req, res) {
     } else {
         res.status(405).json({ error: 'Method Not Allowed' });
     }
-}
+});
+
+export default handler;

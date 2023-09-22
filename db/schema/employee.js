@@ -9,6 +9,7 @@ const employeeSchema = new Schema(
         email: { type: String, required: true },
         password: { type: String, required: true },
         mobileNumber: { type: Number, required: true },
+        fileId: { type: [String], required: false },
     },
     {
         timestamps: true,
