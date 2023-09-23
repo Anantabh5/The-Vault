@@ -3,7 +3,6 @@ import Link from 'next/link'; // Import Link from 'next/link'
 
 const linkStyle = {
   textDecoration: 'none', // Remove underline
-  color: 'inherit', // Inherit the color from parent
 };
 
 function Homepage() {
@@ -19,29 +18,6 @@ function Homepage() {
               </Link>
               <Link href={'/login/cuser'}>
                 <button className="btn btn-success mb-2" style={linkStyle}>Login</button>
-              </Link>
-              <Link href={'/customercare'}>
-                <button className="btn btn-info mb-2" style={linkStyle}>Customer Care</button>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Corporates</h5>
-              <Link href={'/register/company'}>
-                <button className="btn btn-primary mb-2" style={linkStyle}>Register as Company</button>
-              </Link>
-              <Link href={'/register/employee'}>
-                <button className="btn btn-primary mb-2" style={linkStyle}>Register as Employee</button>
-              </Link>
-              <Link href={'/login/employee'}>
-                <button className="btn btn-success mb-2" style={linkStyle}>Login as Employee</button>
-              </Link>
-              <Link href={'/login/company'}>
-                <button className="btn btn-success mb-2" style={linkStyle}>Login as Company</button>
               </Link>
               <Link href={'/customercare'}>
                 <button className="btn btn-info mb-2" style={linkStyle}>Customer Care</button>

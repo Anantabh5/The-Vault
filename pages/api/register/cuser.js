@@ -1,4 +1,3 @@
-// pages/api/register/cuser.js
 import connectDb from '../../../db/db';
 import CUser from '../../../db/schema/cuser'; // Import your CUser model
 import { v4 as uuidv4 } from 'uuid'; // Import uuid

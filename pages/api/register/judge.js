@@ -18,6 +18,7 @@ handler.post(async (req, res) => {
                 name,
                 judgeUniqueId,
                 email,
+                
                 password,
                 mobileNumber,
             } = req.body;

@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Layout from "../../components/layout";
 import Cookies from "js-cookie";
+import { useRouter } from 'next/router';
+
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
-    fullName: '',
-    dobDay: '',
-    dobMonth: '',
-    dobYear: '',
-    gender: '',
-    mobileNumber: '',
+    name: '',
+    judgeUniqueId: '',
     email: '',
-    securityPin: '',
-    judgeUniqueId: '', // New field for Judge's Unique ID
+    password: '',
+    mobileNumber: '',
   });
+
+  const router = useRouter();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,32 +21,41 @@ const RegistrationForm = () => {
       ...formData,
       [name]: value,
     });
-    Cookies.set('judgeUniqueId', judgeUniqueId);
-    Cookies.set('type', 'judge');
+    // Cookies.set('judgeUniqueId', value); // Store judgeUniqueId in a cookie
+    // Cookies.set('type', 'judge');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form Data:', formData);
-  };
 
-  // Generate an array of years from current year back to 1900
-  const years = Array.from({ length: new Date().getFullYear() - 1900 + 1 }, (_, i) => (new Date().getFullYear() - i));
+    try {
+      const response = await axios.post('/api/register/judge', formData);
+
+      if (response.status === 201) {
+        // Registration successful, redirect to the judge's profile page
+        router.push(`/judge/${response.data.id}`);
+      } else {
+        // Handle other response status codes or errors
+        console.error('Registration failed:', response.data.error);
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+    }
+  };
 
   return (
     <Layout>
       <div className="container mt-5">
-        <h2>Registration Form</h2>
+        <h2>Registration Form for Judge</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="fullName">Full Name</label>
+            <label htmlFor="name">Full Name</label>
             <input
               type="text"
               className="form-control"
-              id="fullName"
-              name="fullName"
-              value={formData.fullName}
+              id="name"
+              name="name"
+              value={formData.name}
               onChange={handleInputChange}
               required
             />
@@ -63,105 +73,7 @@ const RegistrationForm = () => {
             />
           </div>
           <div className="form-group">
-            <label>Date of Birth</label>
-            <div className="row">
-              <div className="col-md-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="DD"
-                  name="dobDay"
-                  value={formData.dobDay}
-                  onChange={handleInputChange}
-                  required
-                  maxLength="2"
-                />
-              </div>
-              <div className="col-md-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="MM"
-                  name="dobMonth"
-                  value={formData.dobMonth}
-                  onChange={handleInputChange}
-                  required
-                  maxLength="2"
-                />
-              </div>
-              <div className="col-md-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="YYYY"
-                  name="dobYear"
-                  value={formData.dobYear}
-                  onChange={handleInputChange}
-                  required
-                  maxLength="4"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Gender</label>
-            <div className="form-check">
-              <input
-                type="radio"
-                className="form-check-input"
-                id="male"
-                name="gender"
-                value="male"
-                onChange={handleInputChange}
-                required
-              />
-              <label className="form-check-label" htmlFor="male">
-                Male
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                type="radio"
-                className="form-check-input"
-                id="female"
-                name="gender"
-                value="female"
-                onChange={handleInputChange}
-                required
-              />
-              <label className="form-check-label" htmlFor="female">
-                Female
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                type="radio"
-                className="form-check-input"
-                id="other"
-                name="gender"
-                value="other"
-                onChange={handleInputChange}
-                required
-              />
-              <label className="form-check-label" htmlFor="other">
-                Other
-              </label>
-            </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="mobileNumber">Mobile Number</label>
-            <input
-              type="tel"
-              className="form-control"
-              id="mobileNumber"
-              name="mobileNumber"
-              value={formData.mobileNumber}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email ID</label>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               className="form-control"
@@ -173,15 +85,25 @@ const RegistrationForm = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="securityPin">Security PIN (6 digits)</label>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               className="form-control"
-              id="securityPin"
-              name="securityPin"
-              minLength="6"
-              maxLength="6"
-              value={formData.securityPin}
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="mobileNumber">Mobile Number</label>
+            <input
+              type="tel"
+              className="form-control"
+              id="mobileNumber"
+              name="mobileNumber"
+              value={formData.mobileNumber}
               onChange={handleInputChange}
               required
             />

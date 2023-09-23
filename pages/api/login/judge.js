@@ -10,9 +10,10 @@ const handler = nc();
 
 handler.post(async (req, res) => {
     if (req.method === 'POST') {
-        const { judgeUniqueId, password } = req.body;
+        const { judgesUniqueId, password } = req.body;
 
         try {
+            const judgeUniqueId = judgesUniqueId;
             const judge = await Judge.findOne({ judgeUniqueId,password });
 
             if (!judge) {
@@ -20,7 +21,7 @@ handler.post(async (req, res) => {
             }
 
             
-           return     res.status(200).json({ id: judge._id, name: judge.name });
+           return res.status(200).json({judge});
            
         } catch (error) {
             console.error('Login error:', error);

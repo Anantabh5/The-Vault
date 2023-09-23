@@ -1,37 +1,56 @@
-import Lawyer from '../../../../db/schema/lawyer'; // Import the Lawyer schema
-import File from '../../../../db/schema/file'; // Import the File schema
-import nc from 'next-connect';
-import connectDb from '../../../../db/db';
-connectDb();
-const handler = nc();
+import React, { useEffect, useState } from 'react';
+import Layout from '../../components/layout';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
-handler.get(async (req, res) => {
-    const  {userId}  = req.body;
+const LawyerFiles = () => {
+  const [files, setFiles] = useState([]);
+// const userId = Cookies.get('userId'); // Get the lawyer's userId from cookies
+const userId = "2bc01fbc-40bb-4339-a67e-162ac9b3cea3"
+; // Get the lawyer's userId from cookies
 
-    try {
-        const lawyer = await Lawyer.findOne({lawyerId:userId});
-        console.log("lawyer chceked");
-        if (!lawyer) {
-            return res.status(404).json({ error: 'Lawyer not found' });
-        }
-        if(!lawyer.fileId)
-        {
-            return res.status(404).json({ error: 'Lawyer files not there' });
-        }
+  useEffect(() => {
+    const fetchLawyerFiles = async () => {
+      try {
+        const response = await axios.get(`/api/lawyer/${userId}/files`);
+        setFiles(response.data.files);
+      } catch (error) {
+        console.error('Error fetching files:', error);
+      }
+    };
 
-        // Assuming each fileId corresponds to a file document
-        // Retrieve file details based on Lawyer's fileId
-        const fileDetails = await File.find({ _id: { $in: lawyer.fileId } });
-
-        if (!fileDetails.length) {
-            return res.status(404).json({ error: 'No files found for this Lawyer' });
-        }
-
-        res.status(200).json({ files: fileDetails });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+    if (userId) {
+      fetchLawyerFiles();
     }
-});
+  }, [userId]);
 
-export default handler;
+  return (
+    <Layout>
+      <div className="container mt-5">
+        <h2>Lawyer Files</h2>
+        <div className="table-responsive">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>File ID</th>
+                <th>File Address</th>
+                <th>Identification</th>
+              </tr>
+            </thead>
+            <tbody>
+              {files.map((file) => (
+                <tr key={file._id}>
+                  <td>{file.fileId}</td>
+                  <td>{file.fileAddress}</td>
+                  <td>{file.identification}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default LawyerFiles;
